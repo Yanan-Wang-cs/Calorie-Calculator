@@ -6,14 +6,12 @@ export default function (componentFactory) {
       this.state = {component: null}
     }
     async componentDidMount() {
-      console.log('???')
       let {default: component} = await componentFactory()
       this.setState({component})
     }
     render() {
 
       let Comp = this.state.component
-      console.log('???', Comp)
       return Comp ? <Comp {...this.props} /> : null
     }
   }

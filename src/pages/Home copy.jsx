@@ -1,4 +1,4 @@
-import React from 'react'
+import { React, useEffect } from 'react'
 import { useSearchParams, useNavigate } from 'react-router-dom'
 
 export default function Home() {
@@ -14,6 +14,9 @@ export default function Home() {
   function show() {
     console.log(myRef.current.value)
   }
+  useEffect(() => {
+
+  }, [])
   return (
     <div>
       Home, {id}, {name}

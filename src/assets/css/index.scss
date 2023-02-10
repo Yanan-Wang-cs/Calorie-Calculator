@@ -1,7 +1,14 @@
 @use 'reset.scss';
+@use '../fonts/index.scss';
 html, body, #root {
   display: flex;
   flex-direction: row;
   flex: 1;
   height: 100%;
+}
+#root .input-textright input {
+  text-align: right;
+}
+#root .input-number {
+  padding-right: 20px;
 }

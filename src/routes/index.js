@@ -6,8 +6,9 @@ import Test from '../pages/Test'
 import Record from '../pages/Record'
 import Mine from '../pages/Mine'
 import AddItem from '../pages/Food/AddItem'
+import List from '../pages/Food/List'
 import Weight from '../pages/Weight'
-import asyncComponents from './asyncComponents'
+import Search from '../pages/Search'
 const element = [
   {
     path: '/home',
@@ -23,11 +24,20 @@ const element = [
   },
   {
     path: '/search',
-    element: asyncComponents(()=>import('../pages/About')),
+    element: <Search />,
   },
   {
-    path: '/food/addItem',
-    element: <AddItem />,
+    path: '/food',
+    children: [
+      {
+        path: '/food/addItem',
+        element: <AddItem />,
+      },
+      {
+        path: '/food/list',
+        element: <List />,
+      },
+    ],
   },
   {
     path: '/weight',

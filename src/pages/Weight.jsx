@@ -1,16 +1,25 @@
 import { React, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import Header from '@/components/Display/Header'
-import { InputNumber } from 'antd'
+import { InputNumber, message } from 'antd'
 import LineCharts from '@/components/Common/LineCharts'
+import { last } from 'lodash'
 
 export default function Weight() {
   const { t } = useTranslation()
-  const weightList = JSON.parse(localStorage.getItem('weight')) || []
-  const [weight, setWeight] = useState(weightList[0] ?? 0)
+  const [weightList, setWeightList] = useState(JSON.parse(localStorage.getItem('weight')) || [])
+  const [weight, setWeight] = useState(weightList.length > 0 ? last(weightList)[1] : 0)
+  const [messageApi, contextHolder] = message.useMessage()
   function handleSave() {
-    weightList.push(weight)
+    setWeightList([
+      ...weightList,
+      [Date.parse(new Date()), weight],
+    ])
     localStorage.setItem('weight', JSON.stringify(weightList))
+    messageApi.open({
+      type: 'success',
+      content: t('message.success'),
+    })
   }
   function onChange(e) {
     setWeight(e)
@@ -18,7 +27,7 @@ export default function Weight() {
   
   return (
     <div>
-      <Header title={t('recordWeight.title')} leftIcon='icon-add' rightContext={t('recordWeight.save')} onClick={handleSave} />
+      <Header title={t('recordWeight.title')} leftIcon='icon-fenxiang' rightIcon='icon-save' onClick={handleSave} />
       <div className='flex flex-col justify-center items-center w-full my-7'>
         <p>{t('recordWeight.tips')}</p>
         <InputNumber
@@ -28,7 +37,8 @@ export default function Weight() {
           className='mt-4'
         />
       </div>
-      <LineCharts className='w-72 h-36' pointList={weightList} />
+      {contextHolder}
+      { weightList.length? <LineCharts className='w-[80%] h-72' pointList={weightList} /> : '' }
     </div>
   )
 }

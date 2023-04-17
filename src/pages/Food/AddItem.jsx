@@ -1,23 +1,32 @@
 import { React, useState } from 'react'
 import { useTranslation } from 'react-i18next'
-import { Input, InputNumber, Radio } from 'antd'
+import { Input, InputNumber, Radio, Select } from 'antd'
 import Header from '@/components/Display/Header'
 import { useNavigate } from 'react-router-dom'
+import { useDispatch } from 'react-redux'
+import { addItem } from '@/redux/features/food'
+import { v4 as uuidv4 } from 'uuid'
 
 export default function AddItem() {
   const { t } = useTranslation()
   const navigate = useNavigate()
+  const dispatch = useDispatch()
   
   const [formItem, setFormItem] = useState({
     name: '',
     count: null,
-    unit: '',
     calorie: '',
     protein: '',
     fat: '',
     carbohydrate: '',
   })
   const [calorieUnit, setCalorieUnit] = useState('kcal')
+  const [unit, setUnit] = useState('ml')
+  const countUnitObject = t('addItem.form.countUnit', {returnObjects: true})
+  const unitOptions = Object.keys(countUnitObject).reduce((arr, key) => {
+    arr.push({value: key, label: countUnitObject[key]})
+    return arr
+  }, [])
   const options = [
     { label: t('addItem.form.calorieUnit.kcal'), value: 'kcal'},
     { label: t('addItem.form.calorieUnit.kj'), value: 'kj'},
@@ -28,9 +37,6 @@ export default function AddItem() {
       [key]: e.target.value,
     })
   }
-  function handleRadioChange({target: {value}}) {
-    setCalorieUnit(value)
-  }
   function transferKj() {
     if(calorieUnit === 'kcal') return formItem.calorie
     return formItem.calorie / 4.18
@@ -40,11 +46,11 @@ export default function AddItem() {
     let params = {
       ...formItem,
       calorie: kcal,
+      unit: unit,
+      id: uuidv4(),
     }
-    let currentFood = JSON.parse(localStorage.getItem('foods') || '[]')
-    currentFood.push(params)
-    localStorage.setItem('foods', JSON.stringify(currentFood))
-    navigate('/record')
+    dispatch(addItem(params))
+    navigate('/food/list')
   }
   function handleNumberChange(e, key) {
     setFormItem({
@@ -52,10 +58,9 @@ export default function AddItem() {
       [key]: e,
     })
   }
-  
   return (
     <div>
-      <Header title={t('addItem.title')} leftIcon='icon-add' rightContext={t('addItem.save')} onClick={handleSave} />
+      <Header title={t('addItem.title')} leftIcon='icon-fenxiang' rightIcon='icon-save' onClick={handleSave} />
       {
         Object.keys(formItem).map(key => {
           return (
@@ -65,7 +70,7 @@ export default function AddItem() {
             >
               <span>{ t(`addItem.form.${key}`) }</span>
               {
-                ['name', 'unit'].indexOf(key) > -1 ? 
+                ['name'].indexOf(key) > -1 ? 
                 <Input
                   value={formItem[key]}
                   allowClear={true}
@@ -88,10 +93,20 @@ export default function AddItem() {
                 key === 'calorie' ? (
                   <Radio.Group
                     options={options}
-                    onChange={handleRadioChange}
+                    onChange={(e) => {setCalorieUnit(e.target.value)}}
                     value={calorieUnit}
                     optionType='button'
                     buttonStyle='solid'
+                  />
+                ) : ''
+              }
+              {
+                key === 'count' ? (
+                  <Select 
+                    defaultValue={unit}
+                    bordered={false}
+                    options={unitOptions}
+                    onChange={(e) => {setUnit(e)}}
                   />
                 ) : ''
               }

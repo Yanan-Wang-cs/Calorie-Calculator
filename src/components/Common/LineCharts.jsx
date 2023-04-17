@@ -1,6 +1,6 @@
 import { React, useEffect } from 'react'
 import PropTypes from 'prop-types'
-
+import { padStart } from 'lodash'
 import * as echarts from 'echarts/core'
 import {
   BarChart,
@@ -33,24 +33,55 @@ echarts.use([
 function LineCharts({pointList=[], className=''}) {
   useEffect(() => {
     const mychart = echarts.init(document.getElementById('echart'))
-    console.log(pointList)
+    const values = pointList.reduce((arr, item) => {
+      arr.push(item[1])
+      return arr
+    }, [])
+    console.log(values)
+    
+    function timestampToTime(timestamp) {
+      let date = new Date(timestamp)
+      let Y = date.getFullYear()
+      let M = padStart(date.getMonth()+1, 2, '0')
+      let D = padStart(date.getDate(), 2, '0')
+      console.log(`${Y}-${M}-${D}`)
+      return `${Y}-${M}-${D}`
+    }
     mychart.setOption({
       xAxis: {
-        data: ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'],
+        type: 'value',
+        min: Math.max(Date.parse(new Date()) - 24*60*60*1000*30, Math.min(pointList[0][0], Date.parse(new Date()) - 24*60*60*1000)),
+        max: Date.parse(new Date()),
+        axisLabel: {
+          formatter: function(e) {
+            return timestampToTime(e)
+          },
+          rotate: 30,
+        },
       },
-      yAxis: {},
+      yAxis: {
+        type: 'value',
+        min: Math.min(values)-1,
+        max: Math.max(values)+1,
+        axisLabel: {
+          formatter: function(e) {
+            return e
+          },
+        },
+      },
       series: [
         {
-          type: 'bar',
-          data: [23, 24, 18, 25, 27, 28, 25],
+          type: 'line',
+          data: pointList,
+          smooth: true,
         },
       ],
     })
   }, [])
   
   return (
-    <div>
-      <div id='echart' className={`flex flex-row items-center w-full ${className}`}></div>
+    <div className='flex flex-col justify-center items-center w-full'>
+      <div id='echart' className={className}></div>
     </div>
   )
 }

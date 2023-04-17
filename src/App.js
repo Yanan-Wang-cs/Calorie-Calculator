@@ -4,9 +4,14 @@ import routes from './routes'
 import i18n from './locales'
 import Footer from '@/components/Display/Footer'
 import { ConfigProvider } from 'antd'
+import { useDispatch } from 'react-redux'
+import { getItem } from '@/redux/features/food'
 
 export default function App() {
 	const element = useRoutes(routes)
+  const dispatch = useDispatch()
+  dispatch(getItem())
+  
 	useEffect(() => {
 		i18n.changeLanguage('en')
 	}, [])

@@ -1,9 +1,9 @@
 import { configureStore } from '@reduxjs/toolkit'
 import counterReducer from '@/redux/features/count'
-import headerReducer from '@/redux/features/header'
+import foodReducer from '@/redux/features/food'
 export default configureStore({
   reducer: {
     counter: counterReducer,
-    header: headerReducer,
+    food: foodReducer,
   },
 })

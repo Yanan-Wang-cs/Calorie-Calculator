@@ -8,6 +8,9 @@ module.exports = {
   homepage: {
     search: 'Search',
   },
+  search: {
+    title: 'Search',
+  },
   addItem: {
     title: 'Add items by yourself',
     description: 'You could add your own foods here.',
@@ -15,7 +18,6 @@ module.exports = {
     form: {
       name: 'Food name',
       count: 'count',
-      unit: 'unit',
       calorie: 'Calorie',
       protein: 'protein',
       fat: 'fat',
@@ -24,16 +26,28 @@ module.exports = {
         kcal: 'kcal',
         kj: 'kj',
       },
+      countUnit: {
+        ml: 'ML',
+        g: 'g',
+        package: 'package',
+      },
     },
     placeholder: {
       name: 'e.g. apple',
       count: '1',
-      unit: 'package',
       calorie: '0',
       protein: '0',
       fat: '0',
       carbohydrate: '0',
     },
+  },
+  foodList: {
+    title: 'Food List',
+    description: 'Display food list',
+    add: 'Add',
+    delete: 'Are you sure to delete this item?',
+    ok: 'Yes',
+    cancel: 'No',
   },
   recordDiet: {
     title: 'Record your diet',
@@ -45,5 +59,8 @@ module.exports = {
     description: 'You could record your weight here.',
     save: 'Save',
     tips: 'Please record your weight here.',
+  },
+  message: {
+    success: 'Success',
   },
 }
